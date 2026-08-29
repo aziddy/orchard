@@ -69,11 +69,11 @@ func loadBuildersRunning() async {
 }
 
 @MainActor
-@Test("loadBuilders: Apple Containers 1.3.0 nested running status maps to .running")
-func loadBuildersV1_3Running() async {
+@Test("loadBuilders: current nested running status maps to .running")
+func loadBuildersNestedRunning() async {
     let runner = MockCommandRunner()
     runner.defaultResult = ProcessResult(
-        exitCode: 0, stdout: makeContainerV1_3BuilderStatusJSON(status: "running"), stderr: nil
+        exitCode: 0, stdout: makeNestedBuilderStatusJSON(status: "running"), stderr: nil
     )
     let (service, _) = makeBuilderService(runner)
 
@@ -85,11 +85,11 @@ func loadBuildersV1_3Running() async {
 }
 
 @MainActor
-@Test("loadBuilders: Apple Containers 1.3.0 nested stopped status maps to .stopped")
-func loadBuildersV1_3Stopped() async {
+@Test("loadBuilders: current nested stopped status maps to .stopped")
+func loadBuildersNestedStopped() async {
     let runner = MockCommandRunner()
     runner.defaultResult = ProcessResult(
-        exitCode: 0, stdout: makeContainerV1_3BuilderStatusJSON(status: "stopped"), stderr: nil
+        exitCode: 0, stdout: makeNestedBuilderStatusJSON(status: "stopped"), stderr: nil
     )
     let (service, _) = makeBuilderService(runner)
 
