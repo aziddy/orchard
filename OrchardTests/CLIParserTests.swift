@@ -20,11 +20,12 @@ func builderStatusNotRunning() {
 
 @Test("Builder status: undecodable JSON reports a decode failure with a preview")
 func builderStatusDecodeFailure() {
-    guard case .decodeFailure(let preview) = parseBuilderStatus(stdout: "{ this is not valid builder json") else {
+    let malformed = "{" + String(repeating: "x", count: 250)
+    guard case .decodeFailure(let preview) = parseBuilderStatus(stdout: malformed) else {
         Issue.record("expected .decodeFailure")
         return
     }
-    #expect(!preview.isEmpty)
+    #expect(preview == String(malformed.prefix(200)))
 }
 
 @Test("Builder status: a valid single-builder JSON object decodes")
@@ -46,6 +47,33 @@ func builderStatusArray() {
         return
     }
     #expect(builders.count == 1)
+}
+
+@Test("Builder status: Apple Containers 1.3.0 running builder decodes nested status")
+func builderStatusV1_3Running() {
+    guard case .builders(let builders) = parseBuilderStatus(
+        stdout: makeContainerV1_3BuilderStatusJSON(status: "running")
+    ) else {
+        Issue.record("expected .builders")
+        return
+    }
+    #expect(builders.count == 1)
+    #expect(builders.first?.status == "running")
+    #expect(builders.first?.configuration.id == "buildkit")
+    #expect(builders.first?.networks.first?.address == "192.168.64.2")
+}
+
+@Test("Builder status: Apple Containers 1.3.0 stopped builder decodes nested status")
+func builderStatusV1_3Stopped() {
+    guard case .builders(let builders) = parseBuilderStatus(
+        stdout: makeContainerV1_3BuilderStatusJSON(status: "stopped")
+    ) else {
+        Issue.record("expected .builders")
+        return
+    }
+    #expect(builders.count == 1)
+    #expect(builders.first?.status == "stopped")
+    #expect(builders.first?.networks.first?.gateway == "192.168.64.1")
 }
 
 // MARK: - parseDNSDomains
