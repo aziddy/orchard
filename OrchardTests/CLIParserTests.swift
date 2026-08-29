@@ -49,10 +49,10 @@ func builderStatusArray() {
     #expect(builders.count == 1)
 }
 
-@Test("Builder status: Apple Containers 1.3.0 running builder decodes nested status")
-func builderStatusV1_3Running() {
+@Test("Builder status: current running builder decodes nested status")
+func builderStatusNestedRunning() {
     guard case .builders(let builders) = parseBuilderStatus(
-        stdout: makeContainerV1_3BuilderStatusJSON(status: "running")
+        stdout: makeNestedBuilderStatusJSON(status: "running")
     ) else {
         Issue.record("expected .builders")
         return
@@ -63,10 +63,10 @@ func builderStatusV1_3Running() {
     #expect(builders.first?.networks.first?.address == "192.168.64.2")
 }
 
-@Test("Builder status: Apple Containers 1.3.0 stopped builder decodes nested status")
-func builderStatusV1_3Stopped() {
+@Test("Builder status: current stopped builder decodes nested status")
+func builderStatusNestedStopped() {
     guard case .builders(let builders) = parseBuilderStatus(
-        stdout: makeContainerV1_3BuilderStatusJSON(status: "stopped")
+        stdout: makeNestedBuilderStatusJSON(status: "stopped")
     ) else {
         Issue.record("expected .builders")
         return

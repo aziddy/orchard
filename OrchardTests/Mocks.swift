@@ -297,8 +297,8 @@ func makeBuilderStatusJSON(id: String = "buildkit", status: String) -> String {
     """
 }
 
-/// An Apple Containers 1.3.0 builder-status payload with status details nested in an array entry.
-func makeContainerV1_3BuilderStatusJSON(id: String = "buildkit", status: String) -> String {
+/// A current Apple container builder-status payload with status details nested in an array entry.
+func makeNestedBuilderStatusJSON(id: String = "buildkit", status: String) -> String {
     """
     [
       {
