@@ -68,6 +68,38 @@ func loadBuildersRunning() async {
     #expect(service.isBuildersLoading == false)
 }
 
+@MainActor
+@Test("loadBuilders: Apple Containers 1.3.0 nested running status maps to .running")
+func loadBuildersV1_3Running() async {
+    let runner = MockCommandRunner()
+    runner.defaultResult = ProcessResult(
+        exitCode: 0, stdout: makeContainerV1_3BuilderStatusJSON(status: "running"), stderr: nil
+    )
+    let (service, _) = makeBuilderService(runner)
+
+    await service.loadBuilders()
+
+    #expect(service.builders.count == 1)
+    #expect(service.builderStatus == .running)
+    #expect(service.isBuildersLoading == false)
+}
+
+@MainActor
+@Test("loadBuilders: Apple Containers 1.3.0 nested stopped status maps to .stopped")
+func loadBuildersV1_3Stopped() async {
+    let runner = MockCommandRunner()
+    runner.defaultResult = ProcessResult(
+        exitCode: 0, stdout: makeContainerV1_3BuilderStatusJSON(status: "stopped"), stderr: nil
+    )
+    let (service, _) = makeBuilderService(runner)
+
+    await service.loadBuilders()
+
+    #expect(service.builders.count == 1)
+    #expect(service.builderStatus == .stopped)
+    #expect(service.isBuildersLoading == false)
+}
+
 // MARK: - start / stop / delete
 
 @MainActor

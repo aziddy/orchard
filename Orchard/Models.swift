@@ -539,10 +539,32 @@ struct Builder: Codable, Equatable {
     let configuration: BuilderConfiguration
     let networks: [Network]
 
+    private struct StatusDetails: Decodable {
+        let state: String
+        let networks: [Network]?
+    }
+
     enum CodingKeys: String, CodingKey {
         case status
         case configuration
         case networks
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        configuration = try container.decode(BuilderConfiguration.self, forKey: .configuration)
+
+        if let legacyStatus = try? container.decode(String.self, forKey: .status) {
+            status = legacyStatus
+            networks = try container.decode([Network].self, forKey: .networks)
+            return
+        }
+
+        let details = try container.decode(StatusDetails.self, forKey: .status)
+        status = details.state
+        networks = try details.networks
+            ?? container.decodeIfPresent([Network].self, forKey: .networks)
+            ?? []
     }
 }
 

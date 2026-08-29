@@ -273,7 +273,7 @@ func makeContainer(id: String, status: String, labels: [String: String] = [:]) t
     return try JSONDecoder().decode(Container.self, from: Data(json.utf8))
 }
 
-/// A single-builder `container builder status --format json` payload with the given status.
+/// A legacy single-builder `container builder status --format json` payload.
 func makeBuilderStatusJSON(id: String = "buildkit", status: String) -> String {
     """
     {
@@ -294,6 +294,43 @@ func makeBuilderStatusJSON(id: String = "buildkit", status: String) -> String {
         "initProcess": \(fixtureInitProcessJSON)
       }
     }
+    """
+}
+
+/// An Apple Containers 1.3.0 builder-status payload with status details nested in an array entry.
+func makeContainerV1_3BuilderStatusJSON(id: String = "buildkit", status: String) -> String {
+    """
+    [
+      {
+        "configuration": {
+          "id": "\(id)",
+          "rosetta": false,
+          "runtimeHandler": "vz",
+          "labels": {},
+          "sysctls": {},
+          "mounts": [],
+          "networks": [],
+          "platform": \(fixturePlatformJSON),
+          "image": \(fixtureImageJSON("buildkit:latest")),
+          "dns": \(fixtureDNSJSON),
+          "resources": { "cpus": 2, "memoryInBytes": 2048 },
+          "initProcess": \(fixtureInitProcessJSON)
+        },
+        "id": "\(id)",
+        "status": {
+          "networks": [
+            {
+              "hostname": "buildkit",
+              "network": "default",
+              "ipv4Address": "192.168.64.2",
+              "ipv4Gateway": "192.168.64.1"
+            }
+          ],
+          "startedDate": "2026-08-28T22:35:07Z",
+          "state": "\(status)"
+        }
+      }
+    ]
     """
 }
 

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Builder status now decodes current Apple container output with nested status and network fields while remaining compatible with legacy builder-status responses.
+
 ## [2.3.0] - 2026-08-29
 
 ### Changed
