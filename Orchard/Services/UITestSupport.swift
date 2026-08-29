@@ -30,7 +30,10 @@ struct UITestBackend: ContainerBackend {
                 runtimeHandler: "vm",
                 initProcess: initProcess(
                     terminal: false,
-                    environment: ["PATH=/usr/bin"],
+                    environment: [
+                        "CODEX_LB_PROXY_UNAUTHENTICATED_CLIENT_CIDRS=192.168.64.1/32",
+                        "PATH=/usr/bin",
+                    ],
                     workingDirectory: "/",
                     arguments: ["nginx", "-g", "daemon off;"],
                     executable: "/usr/sbin/nginx",

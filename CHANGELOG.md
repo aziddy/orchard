@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Builder status now decodes Apple Containers 1.3.0's nested status and network fields while remaining compatible with legacy builder-status responses.
+- Container details now use a stable full-width configuration layout that prevents scrolling from hanging, while long environment-variable or label keys wrap within a bounded column instead of pushing values and controls off-screen.
 
 ## [2.2.2] - 2026-08-25
 
